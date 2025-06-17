@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学至尊 - GCSE数学技能树</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            overflow-x: auto;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* 动态星空背景 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* 主标题区域 */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-size: 4em;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            text-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3)); }
+            to { filter: drop-shadow(0 0 40px rgba(255, 255, 255, 0.6)); }
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #b8b8b8;
+            margin-bottom: 30px;
+        }
+
+        /* 至尊徽章 */
+        .supreme-badge {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 40px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #ff6b6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: rotate 10s linear infinite;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+        }
+
+        .supreme-badge::before {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, #1a1a2e 0%, #16213e 100%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .badge-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .badge-level {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .badge-title {
+            font-size: 1.2em;
+            color: #fff;
+            margin-top: 10px;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* 技能树容器 */
+        .skills-container {
+            position: relative;
+            z-index: 10;
+            padding: 50px 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 80px;
+            margin-bottom: 60px;
+        }
+
+        /* 技能分支 */
+        .skill-branch {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.6s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            perspective: 1000px;
+            height: 380px;
+        }
+
+        .skill-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .skill-branch.flipped .skill-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .skill-card-front, .skill-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .skill-card-back {
+            transform: rotateY(180deg);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border: 2px solid;
+            overflow: hidden;
+        }
+
+        .skill-branch:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .skill-branch::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .skill-branch:hover::before {
+            animation: shimmer 1.5s ease-in-out;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .skill-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+            border: 3px solid;
+            position: relative;
+            z-index: 2;
+        }
+
+        .skill-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .skill-level {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .skill-description {
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            padding: 0 10px;
+        }
+
+        /* 技能卡片背面样式 */
+        .skill-back-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, currentColor, #fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .skill-back-subtitle {
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .skill-back-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .skill-power {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid;
+        }
+
+        .power-title {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .power-icon {
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        .power-description {
+            font-size: 0.8em;
+            line-height: 1.3;
+            opacity: 0.9;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            text-align: left;
+            padding: 0 5px;
+        }
+
+        .skill-mastery {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid;
+        }
+
+        .mastery-text {
+            font-size: 0.8em;
+            font-weight: bold;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* 翻转提示 */
+        .flip-hint {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            opacity: 0.6;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 5px 10px;
+            border-radius: 15px;
+            z-index: 3;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* 等级进度条 */
+        .level-progress {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .level-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .level-dot.active {
+            background: currentColor;
+            box-shadow: 0 0 15px currentColor;
+            animation: levelPulse 2s infinite;
+        }
+
+        .level-dot.completed {
+            background: currentColor;
+        }
+
+        @keyframes levelPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        /* 技能分支颜色 */
+        .numerical { border-color: #ff6b6b; color: #ff6b6b; }
+        .algebraic { border-color: #4ecdc4; color: #4ecdc4; }
+        .proportional { border-color: #45b7d1; color: #45b7d1; }
+        .spatial { border-color: #96ceb4; color: #96ceb4; }
+        .probability { border-color: #feca57; color: #feca57; }
+        .data-analysis { border-color: #ff9ff3; color: #ff9ff3; }
+
+        /* 雷达图样式 */
+        .radar-chart-container {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .radar-title {
+            font-size: 2em;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .radar-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        #skillRadarChart {
+            max-width: 400px;
+            max-height: 400px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .radar-legend {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 1em;
+            color: #fff;
+        }
+
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid;
+        }
+
+        .legend-color.numerical { background: #ff6b6b; border-color: #ff6b6b; }
+        .legend-color.algebraic { background: #4ecdc4; border-color: #4ecdc4; }
+        .legend-color.proportional { background: #45b7d1; border-color: #45b7d1; }
+        .legend-color.spatial { background: #96ceb4; border-color: #96ceb4; }
+        .legend-color.probability { background: #feca57; border-color: #feca57; }
+        .legend-color.data-analysis { background: #ff9ff3; border-color: #ff9ff3; }
+
+        /* 总体进度 */
+        .overall-progress {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
+            border-radius: 10px;
+            transition: width 1s ease;
+            animation: progressGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes progressGlow {
+            from { box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); }
+            to { box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); }
+        }
+
+        .progress-text {
+            font-size: 1.3em;
+            color: #fff;
+        }
+
+        /* 成就系统 */
+        .achievements {
+            margin-top: 50px;
+            text-align: center;
+        }
+
+        .achievements-title {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #ffd700;
+        }
+
+        .achievement-list {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .achievement {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: 3px solid #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            transition: all 0.3s ease;
+        }
+
+        .achievement.unlocked {
+            border-color: #ffd700;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 0%, rgba(255, 215, 0, 0.1) 100%);
+            animation: achievementGlow 2s infinite;
+        }
+
+        @keyframes achievementGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 40px rgba(255, 215, 0, 0.8); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .skills-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .skills-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(6, 1fr);
+                gap: 40px;
+            }
+            
+            .main-title {
+                font-size: 2.5em;
+            }
+            
+            .supreme-badge {
+                width: 150px;
+                height: 150px;
+            }
+            
+            #skillRadarChart {
+                max-width: 300px;
+                max-height: 300px;
+            }
+            
+            .radar-legend {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .radar-title {
+                font-size: 1.5em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #skillRadarChart {
+                max-width: 250px;
+                max-height: 250px;
+            }
+            
+            .radar-legend {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div>
+
+    <!-- 主标题区域 -->
+    <div class="header">
+        <h1 class="main-title">数学至尊</h1>
+        <p class="subtitle">GCSE Mathematics Supreme Master</p>
+        
+        <!-- 至尊徽章 -->
+        <div class="supreme-badge">
+            <div class="badge-content">
+                <div class="badge-level" id="overallLevel">IX</div>
+                <div class="badge-title">至尊</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 技能树容器 -->
+    <div class="skills-container">
+        <!-- 六大技能分支 -->
+        <div class="skills-grid">
+            <!-- 数值技能 -->
+            <div class="skill-branch numerical" data-skill="numerical">
+                <div class="skill-card-inner">
+                    <!-- 卡片正面 -->
+                    <div class="skill-card-front">
+                        <div class="skill-icon numerical">🔢</div>
+                        <div class="skill-name">数值技能</div>
+                        <div class="skill-level">等级 <span id="numerical-level">5</span>/9</div>
+                        <div class="level-progress">
+                            <div class="level-dot numerical completed"></div>
+                            <div class="level-dot numerical completed"></div>
+                            <div class="level-dot numerical completed"></div>
+                            <div class="level-dot numerical completed"></div>
+                            <div class="level-dot numerical active"></div>
+                            <div class="level-dot numerical"></div>
+                            <div class="level-dot numerical"></div>
+                            <div class="level-dot numerical"></div>
+                            <div class="level-dot numerical"></div>
+                        </div>
+                        <div class="skill-description">掌握数字运算、分数、小数、百分比等基础数值概念</div>
+
+                    </div>
+                    <!-- 卡片背面 -->
+                    <div class="skill-card-back numerical">
+                        <div class="skill-back-title">🔢 数值掌控者</div>
+                        <div class="skill-back-subtitle">"数字是宇宙的语言"</div>
+                        <div class="skill-back-content">
+                            <div class="skill-power numerical">
+                                <div class="power-title">
+                                    <span class="power-icon">⚡</span>
+                                    精准计算之力
+                                </div>
+                                <div class="power-description">
+                                    如同金融分析师般精准处理数据，让复杂的财务报表在你面前一目了然
+                                </div>
+                            </div>
+                            <div class="skill-power numerical">
+                                <div class="power-title">
+                                    <span class="power-icon">🎯</span>
+                                    比例洞察之眼
+                                </div>
+                                <div class="power-description">
+                                    像建筑师设计蓝图一样，精确掌控每个比例关系，创造完美的数学结构
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skill-mastery numerical">
+                            <div class="mastery-text">现实影响：成为数据驱动决策的专家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 代数技能 -->
+            <div class="skill-branch algebraic" data-skill="algebraic">
+                <div class="skill-card-inner">
+                    <!-- 卡片正面 -->
+                    <div class="skill-card-front">
+                        <div class="skill-icon algebraic">📐</div>
+                        <div class="skill-name">代数技能</div>
+                        <div class="skill-level">等级 <span id="algebraic-level">6</span>/9</div>
+                        <div class="level-progress">
+                            <div class="level-dot algebraic completed"></div>
+                            <div class="level-dot algebraic completed"></div>
+                            <div class="level-dot algebraic completed"></div>
+                            <div class="level-dot algebraic completed"></div>
+                            <div class="level-dot algebraic completed"></div>
+                            <div class="level-dot algebraic active"></div>
+                            <div class="level-dot algebraic"></div>
+                            <div class="level-dot algebraic"></div>
+                            <div class="level-dot algebraic"></div>
+                        </div>
+                        <div class="skill-description">掌握代数表达式、方程求解、函数图像等代数概念</div>
+                    </div>
+                    <!-- 卡片背面 -->
+                    <div class="skill-card-back algebraic">
+                        <div class="skill-back-title">📐 方程解码师</div>
+                        <div class="skill-back-subtitle">"未知数不再是秘密"</div>
+                        <div class="skill-back-content">
+                            <div class="skill-power algebraic">
+                                <div class="power-title">
+                                    <span class="power-icon">🔍</span>
+                                    未知探索之术
+                                </div>
+                                <div class="power-description">
+                                    如同侦探破案般揭开未知数的面纱，让复杂的方程式在你面前无所遁形
+                                </div>
+                            </div>
+                            <div class="skill-power algebraic">
+                                <div class="power-title">
+                                    <span class="power-icon">📈</span>
+                                    函数预言之力
+                                </div>
+                                <div class="power-description">
+                                    像经济学家预测市场趋势一样，通过函数图像洞察变化规律和未来走向
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skill-mastery algebraic">
+                            <div class="mastery-text">现实影响：成为逻辑推理和问题解决的高手</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 比例技能 -->
+            <div class="skill-branch proportional" data-skill="proportional">
+                <div class="skill-card-inner">
+                    <!-- 卡片正面 -->
+                    <div class="skill-card-front">
+                        <div class="skill-icon proportional">⚖️</div>
+                        <div class="skill-name">比例技能</div>
+                        <div class="skill-level">等级 <span id="proportional-level">6</span>/9</div>
+                        <div class="level-progress">
+                            <div class="level-dot proportional completed"></div>
+                            <div class="level-dot proportional completed"></div>
+                            <div class="level-dot proportional completed"></div>
+                            <div class="level-dot proportional completed"></div>
+                            <div class="level-dot proportional active"></div>
+                            <div class="level-dot proportional"></div>
+                            <div class="level-dot proportional"></div>
+                            <div class="level-dot proportional"></div>
+                            <div class="level-dot proportional"></div>
+                        </div>
+                        <div class="skill-description">掌握比例、比率、百分比变化等比例关系概念</div>
+                    </div>
+                    <!-- 卡片背面 -->
+                    <div class="skill-card-back proportional">
+                        <div class="skill-back-title">⚖️ 平衡大师</div>
+                        <div class="skill-back-subtitle">"万物皆有其比例之美"</div>
+                        <div class="skill-back-content">
+                            <div class="skill-power proportional">
+                                <div class="power-title">
+                                    <span class="power-icon">🎨</span>
+                                    黄金比例之眼
+                                </div>
+                                <div class="power-description">
+                                    如同艺术家掌握黄金比例般，在设计和生活中创造完美的和谐与美感
+                                </div>
+                            </div>
+                            <div class="skill-power proportional">
+                                <div class="power-title">
+                                    <span class="power-icon">💰</span>
+                                    价值转换之术
+                                </div>
+                                <div class="power-description">
+                                    像货币兑换专家一样，精准掌控汇率变化，在全球化时代游刃有余
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skill-mastery proportional">
+                            <div class="mastery-text">现实影响：成为资源配置和价值评估的专家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 空间技能 -->
+            <div class="skill-branch spatial" data-skill="spatial">
+                <div class="skill-card-inner">
+                    <!-- 卡片正面 -->
+                    <div class="skill-card-front">
+                        <div class="skill-icon spatial">🏗️</div>
+                        <div class="skill-name">空间技能</div>
+                        <div class="skill-level">等级 <span id="spatial-level">6</span>/9</div>
+                        <div class="level-progress">
+                            <div class="level-dot spatial completed"></div>
+                            <div class="level-dot spatial completed"></div>
+                            <div class="level-dot spatial completed"></div>
+                            <div class="level-dot spatial completed"></div>
+                            <div class="level-dot spatial completed"></div>
+                            <div class="level-dot spatial active"></div>
+                            <div class="level-dot spatial"></div>
+                            <div class="level-dot spatial"></div>
+                            <div class="level-dot spatial"></div>
+                        </div>
+                        <div class="skill-description">掌握几何图形、测量、空间关系等几何概念</div>
+                    </div>
+                    <!-- 卡片背面 -->
+                    <div class="skill-card-back spatial">
+                        <div class="skill-back-title">🏗️ 空间建筑师</div>
+                        <div class="skill-back-subtitle">"几何是冻结的音乐"</div>
+                        <div class="skill-back-content">
+                            <div class="skill-power spatial">
+                                <div class="power-title">
+                                    <span class="power-icon">🌍</span>
+                                    三维视界之力
+                                </div>
+                                <div class="power-description">
+                                    如同建筑大师般在脑海中构建立体世界，让平面图纸变成现实建筑
+                                </div>
+                            </div>
+                            <div class="skill-power spatial">
+                                <div class="power-title">
+                                    <span class="power-icon">📐</span>
+                                    精密测量之术
+                                </div>
+                                <div class="power-description">
+                                    像工程师测绘地形一样，精确计算距离、角度和面积，掌控空间奥秘
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skill-mastery spatial">
+                            <div class="mastery-text">现实影响：成为空间设计和工程规划的专家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 概率技能 -->
+            <div class="skill-branch probability" data-skill="probability">
+                <div class="skill-card-inner">
+                    <!-- 卡片正面 -->
+                    <div class="skill-card-front">
+                        <div class="skill-icon probability">🎲</div>
+                        <div class="skill-name">概率技能</div>
+                        <div class="skill-level">等级 <span id="probability-level">5</span>/9</div>
+                        <div class="level-progress">
+                            <div class="level-dot probability completed"></div>
+                            <div class="level-dot probability completed"></div>
+                            <div class="level-dot probability completed"></div>
+                            <div class="level-dot probability completed"></div>
+                            <div class="level-dot probability active"></div>
+                            <div class="level-dot probability"></div>
+                            <div class="level-dot probability"></div>
+                            <div class="level-dot probability"></div>
+                            <div class="level-dot probability"></div>
+                        </div>
+                        <div class="skill-description">掌握概率计算、随机事件、统计推断等概率概念</div>
+                    </div>
+                    <!-- 卡片背面 -->
+                    <div class="skill-card-back probability">
+                        <div class="skill-back-title">🎲 命运预言师</div>
+                        <div class="skill-back-subtitle">"在不确定中寻找确定"</div>
+                        <div class="skill-back-content">
+                            <div class="skill-power probability">
+                                <div class="power-title">
+                                    <span class="power-icon">🔮</span>
+                                    未来预测之术
+                                </div>
+                                <div class="power-description">
+                                    如同气象学家预测天气般，通过概率模型洞察未来可能性和风险
+                                </div>
+                            </div>
+                            <div class="skill-power probability">
+                                <div class="power-title">
+                                    <span class="power-icon">🎯</span>
+                                    风险评估之眼
+                                </div>
+                                <div class="power-description">
+                                    像保险精算师一样，精确计算风险概率，为决策提供科学依据
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skill-mastery probability">
+                            <div class="mastery-text">现实影响：成为风险管理和决策分析的专家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据分析技能 -->
+            <div class="skill-branch data-analysis" data-skill="data-analysis">
+                <div class="skill-card-inner">
+                    <!-- 卡片正面 -->
+                    <div class="skill-card-front">
+                        <div class="skill-icon data-analysis">📊</div>
+                        <div class="skill-name">数据分析</div>
+                        <div class="skill-level">等级 <span id="data-analysis-level">6</span>/9</div>
+                        <div class="level-progress">
+                            <div class="level-dot data-analysis completed"></div>
+                            <div class="level-dot data-analysis completed"></div>
+                            <div class="level-dot data-analysis completed"></div>
+                            <div class="level-dot data-analysis completed"></div>
+                            <div class="level-dot data-analysis completed"></div>
+                            <div class="level-dot data-analysis active"></div>
+                            <div class="level-dot data-analysis"></div>
+                            <div class="level-dot data-analysis"></div>
+                            <div class="level-dot data-analysis"></div>
+                        </div>
+                        <div class="skill-description">掌握数据收集、图表分析、统计描述等数据技能</div>
+                    </div>
+                    <!-- 卡片背面 -->
+                    <div class="skill-card-back data-analysis">
+                        <div class="skill-back-title">📊 数据解读者</div>
+                        <div class="skill-back-subtitle">"让数据说话，用图表发声"</div>
+                        <div class="skill-back-content">
+                            <div class="skill-power data-analysis">
+                                <div class="power-title">
+                                    <span class="power-icon">🔍</span>
+                                    模式识别之力
+                                </div>
+                                <div class="power-description">
+                                    如同数据科学家般从海量信息中发现隐藏规律，让复杂数据变得清晰
+                                </div>
+                            </div>
+                            <div class="skill-power data-analysis">
+                                <div class="power-title">
+                                    <span class="power-icon">📈</span>
+                                    趋势洞察之眼
+                                </div>
+                                <div class="power-description">
+                                    像市场分析师解读股市走势一样，通过图表分析预测发展趋势
+                                </div>
+                            </div>
+                        </div>
+                        <div class="skill-mastery data-analysis">
+                            <div class="mastery-text">现实影响：成为商业智能和数据驱动决策的专家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 技能雷达图 -->
+        <div class="radar-chart-container">
+            <div class="radar-title">🎯 技能雷达图</div>
+            <div class="radar-wrapper">
+                <canvas id="skillRadarChart" width="400" height="400"></canvas>
+            </div>
+            <div class="radar-legend">
+                <div class="legend-item"><span class="legend-color numerical"></span>数值技能</div>
+                <div class="legend-item"><span class="legend-color algebraic"></span>代数技能</div>
+                <div class="legend-item"><span class="legend-color proportional"></span>比例技能</div>
+                <div class="legend-item"><span class="legend-color spatial"></span>空间技能</div>
+                <div class="legend-item"><span class="legend-color probability"></span>概率技能</div>
+                <div class="legend-item"><span class="legend-color data-analysis"></span>数据分析</div>
+            </div>
+        </div>
+
+        <!-- 总体进度 -->
+        <div class="overall-progress">
+            <div class="progress-title">数学至尊进度</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="overallProgress" style="width: 72%;"></div>
+            </div>
+            <div class="progress-text" id="progressText">总体进度: 72% (39/54 等级)</div>
+        </div>
+
+        <!-- 成就系统 -->
+        <div class="achievements">
+            <div class="achievements-title">🏆 成就徽章</div>
+            <div class="achievement-list">
+                <div class="achievement unlocked" title="基础大师">🥉</div>
+                <div class="achievement unlocked" title="应用专家">🥈</div>
+                <div class="achievement unlocked" title="精通学者">🥇</div>
+                <div class="achievement unlocked" title="全能战士">⚔️</div>
+                <div class="achievement unlocked" title="数学贤者">🧙</div>
+                <div class="achievement" title="至尊大师">👑</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const numberOfStars = 100;
+
+            for (let i = 0; i < numberOfStars; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // 计算总体等级
+        function calculateOverallLevel() {
+            const levels = {
+                numerical: 5,
+                algebraic: 6,
+                proportional: 5,
+                spatial: 6,
+                probability: 5,
+                dataAnalysis: 6
+            };
+
+            const totalLevels = Object.values(levels).reduce((sum, level) => sum + level, 0);
+            const maxLevels = 54; // 6 skills × 9 levels
+            const percentage = Math.round((totalLevels / maxLevels) * 100);
+            
+            // 更新进度条
+            document.getElementById('overallProgress').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `总体进度: ${percentage}% (${totalLevels}/${maxLevels} 等级)`;
+            
+            // 更新至尊等级
+            const overallLevel = Math.min(Math.floor(totalLevels / 6), 9);
+            const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX'];
+            document.getElementById('overallLevel').textContent = romanNumerals[overallLevel - 1] || 'IX';
+        }
+
+        // 技能分支点击翻转事件
+        document.querySelectorAll('.skill-branch').forEach(branch => {
+            branch.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 添加翻转效果
+                this.classList.toggle('flipped');
+                
+                // 添加点击动画效果
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
+                // 添加粒子爆炸效果
+                createParticleExplosion(this);
+                
+                const skillType = this.dataset.skill;
+                console.log(`${this.classList.contains('flipped') ? '翻转到背面' : '翻转到正面'}: ${skillType} 技能`);
+            });
+            
+            // 鼠标悬停时的额外效果
+            branch.addEventListener('mouseenter', function() {
+                if (!this.classList.contains('flipped')) {
+                    this.style.boxShadow = '0 25px 50px rgba(255, 255, 255, 0.3)';
+                }
+            });
+            
+            branch.addEventListener('mouseleave', function() {
+                this.style.boxShadow = '';
+            });
+        });
+        
+        // 创建粒子爆炸效果
+        function createParticleExplosion(element) {
+            const rect = element.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            
+            // 获取技能颜色
+            const skillClass = element.classList[1]; // numerical, algebraic, etc.
+            const colors = {
+                'numerical': '#ff6b6b',
+                'algebraic': '#4ecdc4',
+                'proportional': '#45b7d1',
+                'spatial': '#96ceb4',
+                'probability': '#feca57',
+                'data-analysis': '#ff9ff3'
+            };
+            const color = colors[skillClass] || '#ffffff';
+            
+            // 创建多个粒子
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'fixed';
+                particle.style.left = centerX + 'px';
+                particle.style.top = centerY + 'px';
+                particle.style.width = '6px';
+                particle.style.height = '6px';
+                particle.style.backgroundColor = color;
+                particle.style.borderRadius = '50%';
+                particle.style.pointerEvents = 'none';
+                particle.style.zIndex = '9999';
+                particle.style.boxShadow = `0 0 10px ${color}`;
+                
+                document.body.appendChild(particle);
+                
+                // 随机方向和距离
+                const angle = (i / 12) * Math.PI * 2;
+                const distance = 50 + Math.random() * 50;
+                const endX = centerX + Math.cos(angle) * distance;
+                const endY = centerY + Math.sin(angle) * distance;
+                
+                // 动画
+                particle.animate([
+                    {
+                        transform: 'translate(0, 0) scale(1)',
+                        opacity: 1
+                    },
+                    {
+                        transform: `translate(${endX - centerX}px, ${endY - centerY}px) scale(0)`,
+                        opacity: 0
+                    }
+                ], {
+                    duration: 800,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                }).onfinish = () => {
+                    document.body.removeChild(particle);
+                };
+            }
+        }
+
+        // 成就徽章悬停效果
+        document.querySelectorAll('.achievement').forEach(achievement => {
+            achievement.addEventListener('mouseenter', function() {
+                if (this.classList.contains('unlocked')) {
+                    this.style.transform = 'scale(1.2)';
+                }
+            });
+            
+            achievement.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // 绘制雷达图
+        function drawRadarChart() {
+            const canvas = document.getElementById('skillRadarChart');
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 150;
+            
+            // 技能数据
+            const skills = [
+                { name: '数值技能', level: 5, color: '#ff6b6b' },
+                { name: '代数技能', level: 6, color: '#4ecdc4' },
+                { name: '比例技能', level: 5, color: '#45b7d1' },
+                { name: '空间技能', level: 6, color: '#96ceb4' },
+                { name: '概率技能', level: 5, color: '#feca57' },
+                { name: '数据分析', level: 6, color: '#ff9ff3' }
+            ];
+            
+            // 清空画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制背景网格
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = 1;
+            
+            // 绘制同心圆
+            for (let i = 1; i <= 9; i++) {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, (radius / 9) * i, 0, 2 * Math.PI);
+                ctx.stroke();
+                
+                // 绘制等级标签
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                ctx.font = '12px Microsoft YaHei';
+                ctx.textAlign = 'center';
+                ctx.fillText(i.toString(), centerX, centerY - (radius / 9) * i + 4);
+            }
+            
+            // 绘制轴线
+            const angleStep = (2 * Math.PI) / skills.length;
+            for (let i = 0; i < skills.length; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(x, y);
+                ctx.stroke();
+                
+                // 绘制技能标签
+                const labelX = centerX + Math.cos(angle) * (radius + 30);
+                const labelY = centerY + Math.sin(angle) * (radius + 30);
+                
+                ctx.fillStyle = skills[i].color;
+                ctx.font = 'bold 14px Microsoft YaHei';
+                ctx.textAlign = 'center';
+                ctx.fillText(skills[i].name, labelX, labelY + 4);
+            }
+            
+            // 绘制技能多边形
+            ctx.beginPath();
+            for (let i = 0; i < skills.length; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const skillRadius = (radius / 9) * skills[i].level;
+                const x = centerX + Math.cos(angle) * skillRadius;
+                const y = centerY + Math.sin(angle) * skillRadius;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.closePath();
+            
+            // 填充多边形
+            const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.3)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0.1)');
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // 绘制多边形边框
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // 绘制技能点
+            for (let i = 0; i < skills.length; i++) {
+                const angle = i * angleStep - Math.PI / 2;
+                const skillRadius = (radius / 9) * skills[i].level;
+                const x = centerX + Math.cos(angle) * skillRadius;
+                const y = centerY + Math.sin(angle) * skillRadius;
+                
+                // 绘制光晕效果
+                const glowGradient = ctx.createRadialGradient(x, y, 0, x, y, 15);
+                glowGradient.addColorStop(0, skills[i].color + '80');
+                glowGradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = glowGradient;
+                ctx.beginPath();
+                ctx.arc(x, y, 15, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // 绘制技能点
+                ctx.fillStyle = skills[i].color;
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // 绘制技能点边框
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                
+                // 绘制等级数字
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 10px Microsoft YaHei';
+                ctx.textAlign = 'center';
+                ctx.fillText(skills[i].level.toString(), x, y + 3);
+            }
+        }
+        
+        // 雷达图动画
+        function animateRadarChart() {
+            let frame = 0;
+            const animate = () => {
+                if (frame < 60) {
+                    drawRadarChart();
+                    frame++;
+                    requestAnimationFrame(animate);
+                }
+            };
+            animate();
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            createStars();
+            calculateOverallLevel();
+            setTimeout(() => {
+                drawRadarChart();
+            }, 500);
+        });
+        
+        // 窗口大小改变时重绘雷达图
+        window.addEventListener('resize', () => {
+            setTimeout(drawRadarChart, 100);
+        });
+    </script>
+</body>
+</html>
